@@ -1,0 +1,62 @@
+PRAGMA foreign_keys = ON;
+PRAGMA user_version = 1;
+
+CREATE TABLE IF NOT EXISTS Tags (
+    id INT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    color_hex TEXT NOT NULL,
+    is_favorite INT NOT NULL DEFAULT 0,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    edit_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS SoundEffects (
+    id INT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    sound_path TEXT NOT NULL,
+    is_favorite INT NOT NULL DEFAULT 0,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    edit_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS SoundPackMetadata (
+    id INT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    image_path TEXT,
+    is_favorite INT NOT NULL DEFAULT 0,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    edit_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS SoundEffectTags (
+    sfx_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (sfx_id) REFERENCES SoundEffects(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE,
+
+    PRIMARY KEY (sfx_id, tag_id)
+);
+
+CREATE TABLE IF NOT EXISTS SoundPackTags (
+    soundpack_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (soundpack_id) REFERENCES SoundPackMetadata(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE,
+
+    PRIMARY KEY (soundpack_id, tag_id)
+);
+
+CREATE TABLE IF NOT EXISTS SoundPackEffects (
+    soundpack_id INT NOT NULL,
+    sfx_id INT NOT NULL,
+    creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (soundpack_id) REFERENCES SoundPackMetadata(id) ON DELETE CASCADE,
+    FOREIGN KEY (sfx_id) REFERENCES SoundEffects(id) ON DELETE CASCADE,
+
+    PRIMARY KEY (soundpack_id, sfx_id)
+)

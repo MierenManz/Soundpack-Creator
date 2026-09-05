@@ -1,0 +1,10 @@
+[package]
+name = "spc-ui"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+freya = { git = "https://github.com/marc2332/freya.git", branch = "main", features = ["router", "titlebar"] }
