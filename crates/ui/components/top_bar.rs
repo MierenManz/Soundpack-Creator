@@ -17,7 +17,7 @@ impl Component for TopBar {
     let mut piped_volume = use_state(|| 0.);
 
     let slider_bars = rect()
-      .padding(Gaps::new(0., 0., 0., 8.))
+      .padding((0., 0., 0., 8.))
       .width(Size::flex(1.))
       .child(
         label()
@@ -39,7 +39,7 @@ impl Component for TopBar {
       .horizontal()
       .content(Content::Flex)
       .width(Size::fill())
-      .padding(Gaps::new_all(8.))
+      .padding(8.)
       .child(slider_bars)
       .child(rect().background(Color::GREEN).width(Size::px(175.)))
   }

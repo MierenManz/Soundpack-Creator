@@ -36,7 +36,7 @@ impl Component for PacksPage {
       .background(Color::GREEN * 0.75)
       .hover_background(Color::GREEN * 0.75 * 0.75)
       .border_fill(Color::TRANSPARENT)
-      .corner_radius(CornerRadius::new_symmetric(0., 4.))
+      .corner_radius((0., 4.))
       .on_press(open_window_cuz_stinky)
       // TODO: Translate
       .child("Add Soundpack");
@@ -49,7 +49,7 @@ impl Component for PacksPage {
       .background(delete_mode().then_some(Color::GRAY).unwrap_or(Color::RED))
       .hover_background(delete_mode().then_some(Color::GRAY).unwrap_or(Color::RED) * 0.75)
       .border_fill(Color::TRANSPARENT)
-      .corner_radius(CornerRadius::new_symmetric(0., 4.))
+      .corner_radius((0., 4.))
       .on_press(toggle_delete)
       .child(
         delete_mode()
@@ -61,12 +61,12 @@ impl Component for PacksPage {
 
     let button_bar = rect()
       .horizontal()
-      .padding(Gaps::new_symmetric(0., 8.))
+      .padding((0., 8.))
       .spacing(4.)
       .child(add_button)
       .child(delete_mode_button);
 
-    let pack_window = rect().expanded().padding(Gaps::new_all(8.)).child(
+    let pack_window = rect().expanded().padding(8.).child(
       ScrollView::new().expanded().children(
         button_data
           .iter()

@@ -31,7 +31,7 @@ impl Component for SideBar {
       .width(Size::px(175.))
       .height(Size::fill())
       .spacing(16.)
-      .padding(Gaps::new_symmetric(0., 8.))
+      .padding((0., 8.))
       .child(sidebar_link(Route::MainPage))
       .child(sidebar_link(Route::PacksPage))
       .child(sidebar_link(Route::SfxPage))
