@@ -37,12 +37,13 @@ impl<T: PartialEq + Clone + Display> Searchbar<T> {
 impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
   fn render(&self) -> impl IntoElement {
     let mut visibility_override = use_state(|| false);
+    let mut search_str = use_state(String::new);
+
     let on_submit = self.on_submit.clone();
     let data = use_state(|| self.data.clone());
-    let search_str = use_state(String::new);
 
     let filtered_data = use_memo::<Vec<String>>(move || {
-      let search = search_str.read().as_str().to_lowercase();
+      let search = search_str.read().to_lowercase();
 
       data
         .read()
@@ -67,6 +68,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
         return;
       }
 
+      search_str.set(String::new());
       visibility_override.set(false);
 
       if let Some(func) = on_submit.as_ref() {
@@ -82,7 +84,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
       }
     };
 
-    let submit_with_str2 = submit_with_str.clone();
+    let mut submit_with_str2 = submit_with_str.clone();
 
     rect()
       .child(
@@ -94,7 +96,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
               .on_validate(move |x: InputValidator| {
                 visibility_override.set(x.text().len() != 0);
               })
-              .on_submit(submit_with_str)
+              .on_submit(submit_with_str.clone())
               .width(Size::flex(1.))
               .height(Size::px(32.))
               .placeholder(self.placeholder.clone())
@@ -104,6 +106,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
             Button::new()
               .on_press(move |_| {
                 visibility_override.set(false);
+                submit_with_str2(search_str.read().to_string())
               })
               .width(Size::px(32.))
               .height(Size::px(32.))
@@ -117,7 +120,8 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
             .on_close(move |_| visibility_override.set(false))
             .children(filtered_data.read().iter().map(|x| {
               let cpy = x.to_string();
-              let mut submit = submit_with_str2.clone();
+              let mut submit = submit_with_str.clone();
+
               MenuButton::new()
                 .on_press(move |_| submit(cpy.to_string()))
                 .child(x.as_str())
