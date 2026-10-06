@@ -5,7 +5,7 @@ use spc_database::DatabaseError;
 
 #[derive(Debug)]
 pub enum CriticalError {
-  ConfigMissing,
+  // ConfigMissing,
   ConfigBwoken,
   CannotInitializeDB,
   DatabaseIsNewerThanCurrentVersion,
@@ -20,7 +20,7 @@ pub enum CriticalError {
 impl CriticalError {
   fn pretty(&self) -> &'static str {
     match self {
-      Self::ConfigMissing => "Missing Config detected",
+      // Self::ConfigMissing => "Missing Config detected",
       Self::ConfigBwoken => "Config is broken and cannot be repaired",
       Self::CannotInitializeDB => "Database could not be initialized",
       Self::DatabaseIsNewerThanCurrentVersion => {
