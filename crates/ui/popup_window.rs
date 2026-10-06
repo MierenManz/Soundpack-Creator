@@ -16,6 +16,7 @@ impl PopupWindow {
 impl App for PopupWindow {
   fn render(&self) -> impl IntoElement {
     let theme = use_init_theme(dark_theme);
+
     rect()
       .expanded()
       .background(theme.read().colors.background)
