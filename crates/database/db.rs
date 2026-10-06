@@ -11,7 +11,6 @@ const INITIALIZE_DB: &'static str = include_str!("./db_schema_v1.sql");
 
 #[derive(Debug)]
 pub struct Database {
-  db_version: u8,
   inner: Arc<Connection>,
 }
 
@@ -37,7 +36,6 @@ impl Database {
     match Self::CURRENT_SCHEMA_VERSION.cmp(&version) {
       Ordering::Equal => Ok(Self {
         inner: Arc::new(conn),
-        db_version: version,
       }),
       Ordering::Greater => todo!("Migration is not a thing yet"),
       Ordering::Less => Err(DatabaseError::DatabaseIsNewerThanCurrentVersion),
