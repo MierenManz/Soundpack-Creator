@@ -11,6 +11,7 @@ pub enum Item<T> {
 pub struct Searchbar<T> {
   data: Vec<T>,
   placeholder: String,
+  width: Size,
   on_submit: Option<EventHandler<Item<T>>>,
 }
 
@@ -19,8 +20,14 @@ impl<T: PartialEq + Clone + Display> Searchbar<T> {
     Self {
       data,
       placeholder: String::new(),
+      width: Size::fill(),
       on_submit: None,
     }
+  }
+
+  pub fn width(mut self, size: impl Into<Size>) -> Self {
+    self.width = size.into();
+    self
   }
 
   pub fn placeholder<'a>(mut self, placeholder: impl Into<Cow<'a, str>>) -> Self {
@@ -37,7 +44,7 @@ impl<T: PartialEq + Clone + Display> Searchbar<T> {
 impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
   fn render(&self) -> impl IntoElement {
     let mut visibility_override = use_state(|| false);
-    let mut search_str = use_state(String::new);
+    let mut search_str = use_state(|| String::new());
 
     let on_submit = self.on_submit.clone();
     let data = use_state(|| self.data.clone());
@@ -68,7 +75,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
         return;
       }
 
-      search_str.set(String::new());
+      *search_str.write() = String::new();
       visibility_override.set(false);
 
       if let Some(func) = on_submit.as_ref() {
@@ -87,6 +94,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
     let mut submit_with_str2 = submit_with_str.clone();
 
     rect()
+      .width(self.width.clone())
       .child(
         rect()
           .horizontal()
@@ -105,8 +113,9 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
           .child(
             Button::new()
               .on_press(move |_| {
+                let str = { search_str.read().to_string() };
                 visibility_override.set(false);
-                submit_with_str2(search_str.read().to_string())
+                submit_with_str2(str);
               })
               .width(Size::px(32.))
               .height(Size::px(32.))
