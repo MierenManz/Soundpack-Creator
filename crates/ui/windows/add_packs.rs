@@ -7,13 +7,15 @@ pub struct AddSoundPack;
 
 impl Component for AddSoundPack {
   fn render(&self) -> impl IntoElement {
+    let tmp_test_data = vec!["Max Verstappen", "Lewis Hamilton", "Haaland", "Steinway"];
+
     let theme = use_theme();
     let name = use_state(|| String::with_capacity(10));
     let picture: ImageSource =
       ("Placeholder", include_bytes!("../placeholder.jpg")).into();
     // let picture = use_state(|| Some());
 
-    let scarlett_square = rect()
+    let metadata = rect()
       .width(Size::flex(2.))
       .height(Size::percent(100.))
       .direction(Direction::Vertical)
@@ -41,13 +43,13 @@ impl Component for AddSoundPack {
       .height(Size::percent(100.))
       .rounded()
       .border(Border::new().width(1.).fill(theme.read().colors.border))
-      .child(Searchbar::new(vec!["Lewie", "Pewie"]).placeholder("Add Sound effect"));
+      .child(Searchbar::new(tmp_test_data).placeholder("Add Sound effect"));
 
     let main_container = rect()
       .content(Content::Flex)
       .horizontal()
       .spacing(16.)
-      .child(scarlett_square)
+      .child(metadata)
       .child(sound_effect_table);
 
     let buttons = rect();
