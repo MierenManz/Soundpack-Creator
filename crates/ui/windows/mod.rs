@@ -1,3 +1,3 @@
-mod add_packs_window;
+mod add_packs;
 
-pub use add_packs_window::AddSoundPack;
+pub use add_packs::AddSoundPack;
