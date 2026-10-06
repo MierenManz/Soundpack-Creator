@@ -47,7 +47,9 @@ impl Error for CriticalError {}
 impl From<DatabaseError> for CriticalError {
   fn from(value: DatabaseError) -> Self {
     match value {
-      DatabaseError::DatabaseIsNewerThanCurrentVersion => Self::DatabaseIsNewerThanCurrentVersion,
+      DatabaseError::DatabaseIsNewerThanCurrentVersion => {
+        Self::DatabaseIsNewerThanCurrentVersion
+      }
       DatabaseError::DatabaseIsBwoken => Self::DatabaseIsBwoken,
       DatabaseError::DatabaseMissing => Self::DatabaseMissing,
       DatabaseError::CannotInitializeDB => Self::CannotInitializeDB,

@@ -25,13 +25,17 @@ impl Component for TopBar {
           // TODO: Translation
           .text(format!("Local Volume ({}%)", (*local_volume.read()))),
       )
-      .child(Slider::new(move |x: f64| local_volume.set(x.ceil())).value(*local_volume.read()))
+      .child(
+        Slider::new(move |x: f64| local_volume.set(x.ceil())).value(*local_volume.read()),
+      )
       .child(
         label()
           .color(Color::WHITE) // TODO: Translation
           .text(format!("Piped Volume ({}%)", (*piped_volume.read()))),
       )
-      .child(Slider::new(move |x: f64| piped_volume.set(x.ceil())).value(*piped_volume.read()));
+      .child(
+        Slider::new(move |x: f64| piped_volume.set(x.ceil())).value(*piped_volume.read()),
+      );
     // TODO: Make this linked together with a toggle
 
     rect()

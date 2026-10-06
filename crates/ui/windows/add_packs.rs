@@ -9,7 +9,8 @@ impl Component for AddSoundPack {
   fn render(&self) -> impl IntoElement {
     let theme = use_theme();
     let name = use_state(|| String::with_capacity(10));
-    let picture: ImageSource = ("Placeholder", include_bytes!("../placeholder.jpg")).into();
+    let picture: ImageSource =
+      ("Placeholder", include_bytes!("../placeholder.jpg")).into();
     // let picture = use_state(|| Some());
 
     let scarlett_square = rect()

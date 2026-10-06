@@ -18,7 +18,8 @@ pub struct GlobalConfig {
 
 impl GlobalConfig {
   pub fn save(&self, path: &Path) -> Result<(), CriticalError> {
-    let str = toml::to_string_pretty(self).map_err(|_| CriticalError::ConfigCouldNotWrite)?;
+    let str =
+      toml::to_string_pretty(self).map_err(|_| CriticalError::ConfigCouldNotWrite)?;
     fs::write(path, str).map_err(|_| CriticalError::ConfigCouldNotWrite)?;
 
     Ok(())
@@ -34,7 +35,8 @@ impl GlobalConfig {
   }
 
   pub fn from_path(path: &Path) -> Result<Self, CriticalError> {
-    let file_data = fs::read_to_string(path).map_err(|_| CriticalError::ConfigCouldNotRead)?;
+    let file_data =
+      fs::read_to_string(path).map_err(|_| CriticalError::ConfigCouldNotRead)?;
     let res = toml::from_str(&file_data).map_err(|_| CriticalError::ConfigBwoken)?;
 
     Ok(res)
