@@ -45,12 +45,4 @@ impl GlobalConfig {
   pub fn db(&self) -> &Path {
     &self.db_path
   }
-
-  pub fn locales_dir(&self) -> &Path {
-    &self.locales_dir
-  }
-
-  pub fn data_dir(&self) -> &Path {
-    &self.data_dir
-  }
 }
