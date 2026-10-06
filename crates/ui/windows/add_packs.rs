@@ -13,7 +13,6 @@ impl Component for AddSoundPack {
     let name = use_state(|| String::with_capacity(10));
     let picture: ImageSource =
       ("Placeholder", include_bytes!("../placeholder.jpg")).into();
-    // let picture = use_state(|| Some());
 
     let metadata = rect()
       .width(Size::flex(2.))
@@ -30,7 +29,6 @@ impl Component for AddSoundPack {
           .child(ImageViewer::new(picture).corner_radius(CornerRadius::new_all(8.))),
       )
       .child(
-        //
         rect()
           .width(Size::percent(100.))
           .height(Size::flex(1.))
@@ -60,10 +58,10 @@ impl Component for AddSoundPack {
         .width(Size::percent(80.))
         .height(Size::percent(100.))
         .spacing(8.)
-        // TODO: Translate
         .child(
           Input::new(name)
             .width(Size::percent(100.))
+            // TODO: Translate
             .placeholder("Name"),
         )
         .child(main_container)
