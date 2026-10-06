@@ -8,7 +8,7 @@ name = "SoundpackCreator"
 path = "main.rs"
 
 [dependencies]
-freya = { git = "https://github.com/marc2332/freya.git", branch = "main", features = ["router", "performance"] }
+freya = { git = "https://github.com/marc2332/freya.git", branch = "main", features = ["router"] }
 spc-ui = { path = "../ui" }
 spc-database = { path = "../database" }
 toml = "1.1.4"
