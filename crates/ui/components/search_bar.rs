@@ -36,37 +36,53 @@ impl<T: PartialEq + Clone + Display> Searchbar<T> {
 
 impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
   fn render(&self) -> impl IntoElement {
-    let mut menu_visible = use_state(|| false);
+    let mut visibility_override = use_state(|| false);
     let on_submit = self.on_submit.clone();
-    let on_submit2 = self.on_submit.clone();
     let data = use_state(|| self.data.clone());
     let search_str = use_state(String::new);
 
-    let mut submit_with_str = move |input_str: &str| {
-      println!("NAME={input_str}");
-      menu_visible.set(false);
+    let filtered_data = use_memo::<Vec<String>>(move || {
+      let search = search_str.read().as_str().to_lowercase();
+
+      data
+        .read()
+        .clone()
+        .into_iter()
+        .filter_map(|x| {
+          let formatted = format!("{x}");
+
+          formatted
+            .to_lowercase()
+            .contains(&search)
+            .then_some(formatted)
+        })
+        .collect()
+    });
+
+    let menu_visible =
+      use_memo(move || visibility_override() && filtered_data.read().len() > 0);
+
+    let submit_with_str = move |input_str: String| {
+      if input_str.len() == 0 {
+        return;
+      }
+
+      visibility_override.set(false);
 
       if let Some(func) = on_submit.as_ref() {
         let ret = data
           .read()
           .as_slice()
           .iter()
-          .find(|x| input_str == &format!("{x}"))
+          .find(|x| input_str == format!("{x}"))
           .map(|x| Item::Existing(x.clone()))
-          .unwrap_or_else(|| Item::New(input_str.to_string()));
+          .unwrap_or_else(|| Item::New(input_str));
 
         func.call(ret);
       }
     };
 
-    let submit_with_idx = move |idx: usize| {
-      println!("IDX={idx}, NAME={}", data.read()[idx].clone());
-      menu_visible.set(false);
-
-      if let Some(func) = on_submit2.as_ref() {
-        func.call(Item::Existing(data.read()[idx].clone()));
-      }
-    };
+    let submit_with_str2 = submit_with_str.clone();
 
     rect()
       .child(
@@ -75,11 +91,10 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
           .content(Content::Flex)
           .child(
             Input::new(search_str)
-              .on_pre_key_down(move |_| {
-                menu_visible.set(true);
-                true
+              .on_validate(move |x: InputValidator| {
+                visibility_override.set(x.text().len() != 0);
               })
-              .on_submit(move |x: String| submit_with_str(&x))
+              .on_submit(submit_with_str)
               .width(Size::flex(1.))
               .height(Size::px(32.))
               .placeholder(self.placeholder.clone())
@@ -88,7 +103,7 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
           .child(
             Button::new()
               .on_press(move |_| {
-                menu_visible.set(false);
+                visibility_override.set(false);
               })
               .width(Size::px(32.))
               .height(Size::px(32.))
@@ -99,23 +114,14 @@ impl<T: PartialEq + Clone + Display + 'static> Component for Searchbar<T> {
       .maybe_child(
         menu_visible().then_some(
           Menu::new()
-            .on_close(move |_| menu_visible.set(false))
-            .children(data.read().iter().enumerate().filter_map(move |(idx, x)| {
-              let formatted = format!("{x}");
-              let search = search_str.read();
-
-              if !formatted
-                .to_lowercase()
-                .contains(&search.as_str().to_lowercase())
-              {
-                return None;
-              }
-
-              let mut submit = submit_with_idx.clone();
-
-              Some(MenuButton::new().child(formatted).on_press(move |_| {
-                submit(idx);
-              }))
+            .on_close(move |_| visibility_override.set(false))
+            .children(filtered_data.read().iter().map(|x| {
+              let cpy = x.to_string();
+              let mut submit = submit_with_str2.clone();
+              MenuButton::new()
+                .on_press(move |_| submit(cpy.to_string()))
+                .child(x.as_str())
+                .into_element()
             })),
         ),
       )
