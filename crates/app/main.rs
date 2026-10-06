@@ -17,20 +17,11 @@ use std::path::Path;
 const APP_NAME: &'static str = env!("CARGO_BIN_NAME");
 
 fn setup_data_directory(base_dir: &Path) -> Result<(), CriticalError> {
-  fs::create_dir_all(base_dir).map_err(|_| CriticalError::DataDirCannotBeCreated)?;
-
-  fs::create_dir_all(base_dir.join("sfx")).map_err(|_| CriticalError::DataDirCannotBeCreated)?;
-
-  Ok(())
+  fs::create_dir_all(base_dir.join("sfx")).map_err(|_| CriticalError::DataDirCannotBeCreated)
 }
 
 fn setup_cfg_directory(base_dir: &Path) -> Result<(), CriticalError> {
-  fs::create_dir_all(base_dir).map_err(|_| CriticalError::ConfigDirCannotBeCreated)?;
-
-  fs::create_dir_all(base_dir.join("locales"))
-    .map_err(|_| CriticalError::ConfigDirCannotBeCreated)?;
-
-  Ok(())
+  fs::create_dir_all(base_dir.join("locales")).map_err(|_| CriticalError::ConfigDirCannotBeCreated)
 }
 
 fn main() {
