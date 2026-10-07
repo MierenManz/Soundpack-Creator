@@ -1,12 +1,17 @@
 use freya::prelude::*;
 
+pub trait Window: Component {
+  const TITLE: &'static str;
+  fn new() -> Self;
+}
+
 #[derive(PartialEq)]
 pub struct PopupWindow {
   element: Element,
 }
 
 impl PopupWindow {
-  pub fn new(element: impl IntoElement) -> Self {
+  pub fn new(element: impl Window) -> Self {
     Self {
       element: element.into_element(),
     }

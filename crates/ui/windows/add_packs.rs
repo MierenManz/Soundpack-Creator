@@ -1,6 +1,7 @@
 use freya::prelude::*;
 
 use crate::components::Searchbar;
+use crate::popup_window::Window;
 
 #[derive(PartialEq)]
 pub struct AddSoundPack;
@@ -67,5 +68,12 @@ impl Component for AddSoundPack {
         .child(main_container)
         .child(buttons),
     )
+  }
+}
+
+impl Window for AddSoundPack {
+  const TITLE: &'static str = "Soundpack Creator - Add new pack";
+  fn new() -> Self {
+    Self
   }
 }
