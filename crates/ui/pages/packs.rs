@@ -1,5 +1,6 @@
+use crate::elements::*;
+use crate::open_or_focus_window;
 use crate::windows::AddSoundPack;
-use crate::{PopupWindow, add_button, delete_button, open_or_focus_window};
 use freya::prelude::*;
 
 #[derive(PartialEq)]
