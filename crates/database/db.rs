@@ -9,7 +9,7 @@ use crate::DatabaseError;
 
 const INITIALIZE_DB: &'static str = include_str!("./db_schema_v1.sql");
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Database {
   inner: Arc<Connection>,
 }

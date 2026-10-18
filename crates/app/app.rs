@@ -1,13 +1,14 @@
 use crate::config::GlobalConfig;
 use crate::error::CriticalError;
-use freya::prelude::*;
-use freya::router::*;
-use spc_ui::Route;
-
 use dirs;
 use freya::prelude::LaunchConfig;
 use freya::prelude::WindowConfig;
 use freya::prelude::launch;
+use freya::prelude::*;
+use freya::router::*;
+use spc_database::Database;
+use spc_ui::Route;
+use spc_utils::report::ok_or_critical;
 use std::fs;
 use std::path::Path;
 
@@ -55,7 +56,13 @@ pub fn setup() -> Result<GlobalConfig, CriticalError> {
   let config = match config_path.exists() {
     true => GlobalConfig::from_path(&config_path)?,
     false => {
-      let cfg = GlobalConfig::create_new();
+      let cfg = GlobalConfig {
+        cfg_dir,
+        data_dir,
+        sfx_dir,
+        locales_dir,
+        selected_language: Box::from("en-us"),
+      };
       cfg.save(&config_path)?;
       cfg
     }
@@ -64,14 +71,16 @@ pub fn setup() -> Result<GlobalConfig, CriticalError> {
   Ok(config)
 }
 
-pub fn launch_spc(_config: GlobalConfig) {
+pub fn launch_spc(config: GlobalConfig) {
+  let db = ok_or_critical(Database::open(config.db_path()));
+
   let window_cfg = WindowConfig::new_app(SoundpackCreator)
     .with_min_size(1280., 720.)
     .with_app_id(APP_NAME)
     .with_title(APP_NAME);
 
   let launch_cfg = LaunchConfig::new()
-    // .with_global_context(value)
+    .with_global_context(db)
     .with_window(window_cfg);
 
   launch(launch_cfg);
