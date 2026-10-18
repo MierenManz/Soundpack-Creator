@@ -1,3 +1,3 @@
-mod button_bar;
+mod buttons;
 
-pub use button_bar::*;
+pub use buttons::*;

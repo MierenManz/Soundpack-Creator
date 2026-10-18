@@ -12,6 +12,9 @@ impl Component for AddSoundPack {
 
     let theme = use_theme();
     let name = use_state(|| String::with_capacity(10));
+    let sfx_names = use_state(Vec::<()>::new);
+    let tag_names = use_state(Vec::<()>::new);
+
     let picture: ImageSource =
       ("Placeholder", include_bytes!("../placeholder.jpg")).into();
 
@@ -51,7 +54,6 @@ impl Component for AddSoundPack {
       .child(metadata)
       .child(sound_effect_table);
 
-    // TODO:
     let buttons = rect();
 
     rect().expanded().cross_align(Alignment::Center).child(

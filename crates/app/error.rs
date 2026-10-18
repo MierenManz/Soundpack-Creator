@@ -11,34 +11,33 @@ pub enum CriticalError {
   DatabaseIsNewerThanCurrentVersion,
   DatabaseIsBwoken,
   DatabaseMissing,
-  DataDirCannotBeCreated,
-  ConfigDirCannotBeCreated,
+  // Not used right now
+  DirCouldNotBeCreated(String),
   ConfigCouldNotWrite,
   ConfigCouldNotRead,
 }
 
-impl CriticalError {
-  fn pretty(&self) -> &'static str {
+impl<'a> CriticalError {
+  fn pretty(&self) -> String {
     match self {
       // Self::ConfigMissing => "Missing Config detected",
-      Self::ConfigBwoken => "Config is broken and cannot be repaired",
-      Self::CannotInitializeDB => "Database could not be initialized",
+      Self::ConfigBwoken => "Config is broken and cannot be repaired".into(),
+      Self::CannotInitializeDB => "Database could not be initialized".into(),
       Self::DatabaseIsNewerThanCurrentVersion => {
-        "Database schema is newer than current version supports"
+        "Database schema is newer than current version supports".into()
       }
-      Self::DatabaseIsBwoken => "uh oh database bwoken >.<",
-      Self::DatabaseMissing => "Oopsie, Scarlett deleted the database!!!",
-      Self::DataDirCannotBeCreated => "Data directory could not be created",
-      Self::ConfigDirCannotBeCreated => "Config directory could not be created",
-      Self::ConfigCouldNotWrite => "Config could not be written",
-      Self::ConfigCouldNotRead => "Config could not be read",
+      Self::DatabaseIsBwoken => "Database is broken beyond repair".into(),
+      Self::DatabaseMissing => "Database is missing".into(),
+      Self::DirCouldNotBeCreated(s) => format!("Directory '{s}' could not be created"),
+      Self::ConfigCouldNotWrite => "Config could not be written".into(),
+      Self::ConfigCouldNotRead => "Config could not be read".into(),
     }
   }
 }
 
 impl Display for CriticalError {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    f.write_str(self.pretty())
+    f.write_str(&self.pretty())
   }
 }
 
