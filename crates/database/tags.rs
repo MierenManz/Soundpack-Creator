@@ -38,17 +38,24 @@ pub struct Tag {
   edit_date: i64,
 }
 
-// pub fn create_tag(database: &mut Database, tag: &Tag) -> Result<(), DatabaseError> {
-//   Ok(())
-// }
+impl From<Tag> for PartialTag {
+  fn from(value: Tag) -> Self {
+    Self {
+      name: value.name,
+      color: value.color,
+      is_favorite: value.is_favorite,
+    }
+  }
+}
 
-// pub fn read_tag_by_id(
-//   database: &mut Database,
-//   id: u32,
-// ) -> Result<Option<Tag>, DatabaseError> {
-//   Ok(None)
-// }
+pub fn create_tag(db: &Database, tag: PartialTag) -> Result<(), DatabaseError> {
+  db.execute(
+    "INSERT INTO Tags (name, color_hex, is_favorite) VALUES (?1, ?2, ?3)",
+    (tag.name(), format!("{}", tag.color()), tag.is_favorite()),
+  )
+  .expect("Error should not happen");
 
-// pub fn read_tags(database: &mut Database) -> Result<Vec<Tag>, DatabaseError> {
-//   Ok(Vec::new())
-// }
+  Ok(())
+}
+
+pub fn read_tag_by_id(db: &Database) -> 

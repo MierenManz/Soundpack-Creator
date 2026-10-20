@@ -16,8 +16,8 @@ impl DatabaseError {
       Self::DatabaseIsNewerThanCurrentVersion => {
         "Database schema is newer than current version supports"
       }
-      Self::DatabaseIsBwoken => "uh oh database bwoken >.<",
-      Self::DatabaseMissing => "Oopsie, Scarlett deleted the database!!!",
+      Self::DatabaseIsBwoken => "Database is broken beyond repair",
+      Self::DatabaseMissing => "Database is not found",
     }
   }
 }
